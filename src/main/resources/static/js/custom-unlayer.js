@@ -33,6 +33,7 @@ $(document).ready(function() {
         }
         unlayer.exportHtml(function(data) {
             var content = data.html; // final html
+            content = "<h1>Test</h1>";
             var jsonDesign = JSON.stringify(data.design);
             var dataN = JSON.parse(jsonDesign);
             if (dataN.body.rows[0].columns[0].contents.length === 0) {

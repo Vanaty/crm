@@ -57,7 +57,7 @@ public class GoogleCalendarApiServiceImpl implements GoogleCalendarApiService {
         EventList eventList = objectMapper.readValue(jsonResponse, EventList.class);
 
         // Convert Event objects to EventDisplay objects
-        List<EventDisplay> eventDisplays = eventList.getItems().stream()
+        List<EventDisplay> eventDisplays = eventList.getItems().stream().filter(event -> event.getStart().getDateTime() != null)
                 .map(event -> {
                     EventDateTime start = event.getStart();
                     EventDateTime end = event.getEnd();
