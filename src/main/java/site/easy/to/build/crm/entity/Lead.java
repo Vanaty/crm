@@ -45,6 +45,9 @@ public class Lead {
     @OneToMany(mappedBy = "lead", cascade = CascadeType.ALL)
     private List<GoogleDriveFile> googleDriveFiles;
 
+    @OneToMany(mappedBy = "lead", cascade = CascadeType.ALL)
+    private List<Expense> expenses;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User manager;
@@ -216,6 +219,14 @@ public class Lead {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public List<Expense> getExpenses() {
+        return expenses;
+    }
+
+    public void setExpenses(List<Expense> expenses) {
+        this.expenses = expenses;
     }
 }
 
