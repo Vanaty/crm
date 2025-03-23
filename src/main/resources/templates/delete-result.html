@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Deletion Result</title>
+    <style>
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            text-align: center;
+        }
+        .success {
+            color: green;
+        }
+        .error {
+            color: red;
+        }
+        .btn {
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Deletion Result</h1>
+        <p th:if="${message}" class="success" th:text="${message}"></p>
+        <p th:if="${error}" class="error" th:text="${error}"></p>
+        <a href="/" class="btn">Return to Home</a>
+    </div>
+</body>
+</html>

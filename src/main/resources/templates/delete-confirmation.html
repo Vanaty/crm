@@ -1,0 +1,82 @@
+<!-- delete-confirmation.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Delete All Data Confirmation</title>
+    <style>
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            text-align: center;
+        }
+        .warning {
+            color: red;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .btn {
+            padding: 10px 20px;
+            margin: 10px;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Confirm Deletion</h1>
+        <p class="warning" th:text="${warning}"></p>
+        <p>Are you sure you want to delete all data from all tables? This action cannot be undone.</p>
+        
+        <form th:action="@{/delete-all/confirm}" method="post">
+            <button type="submit" class="btn btn-danger">Yes, Delete All Data</button>
+            <a href="/" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</body>
+</html>
+
+<!-- delete-result.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Deletion Result</title>
+    <style>
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            text-align: center;
+        }
+        .success {
+            color: green;
+        }
+        .error {
+            color: red;
+        }
+        .btn {
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Deletion Result</h1>
+        <p th:if="${message}" class="success" th:text="${message}"></p>
+        <p th:if="${error}" class="error" th:text="${error}"></p>
+        <a href="/" class="btn">Return to Home</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Import CSV</title>
+    <meta charset="UTF-8">
+    <style>
+        .container { max-width: 800px; margin: 20px auto; padding: 20px; }
+        .message { color: #ff0000; margin: 10px 0; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .error-list { color: #ff0000; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Importer un fichier CSV</h2>
+        
+        <form method="post" enctype="multipart/form-data" th:action="@{/csv/upload}">
+            <select name="entityClass" required>
+                <option value="">Sélectionner une entité</option>
+                <option th:each="entity : ${entityClasses}" 
+                        th:value="${entity.name}" 
+                        th:text="${entity.simpleName}"></option>
+            </select>
+            <input type="file" name="file" accept=".csv" />
+            <input type="submit" value="Importer" />
+        </form>
+        
+        <div class="message" th:text="${message}"></div>
+        
+        <div th:if="${errors != null and !errors.isEmpty()}">
+            <h3>Erreurs de validation</h3>
+            <ul class="error-list">
+                <li th:each="errorEntry : ${errors.entrySet()}">
+                    Ligne <span th:text="${errorEntry.key}"></span> : 
+                    <span th:each="msg : ${errorEntry.value}" th:text="${msg}"></span>
+                </li>
+            </ul>
+        </div>
+        
+        <table th:if="${importedData != null and !importedData.isEmpty()}">
+            <thead>
+                <tr>
+                    <th th:each="field : ${importedData[0].class.declaredFields}" 
+                        th:if="${field.getAnnotation(T(com.example.CsvColumn)) != null}"
+                        th:text="${field.getAnnotation(T(com.example.CsvColumn)).name()}">
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="item : ${importedData}">
+                    <td th:each="field : ${item.class.declaredFields}" 
+                        th:if="${field.getAnnotation(T(com.example.CsvColumn)) != null}">
+                        <span th:text="${item[field.name]}"></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

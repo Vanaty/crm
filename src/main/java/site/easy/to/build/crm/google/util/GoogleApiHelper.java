@@ -75,7 +75,7 @@ public class GoogleApiHelper {
         Multipart multipart = new MimeMultipart();
 
         MimeBodyPart textPart = new MimeBodyPart();
-        textPart.setContent(body, "text/plain");
+        textPart.setContent(body, "text/html");
         multipart.addBodyPart(textPart);
 
         for (File attachment : attachments) {

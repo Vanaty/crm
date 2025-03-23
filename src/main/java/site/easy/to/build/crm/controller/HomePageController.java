@@ -52,7 +52,7 @@ public class HomePageController {
     @GetMapping("/")
     public String showHomePage(Model model, Authentication authentication) {
         int userId = authenticationUtils.getLoggedInUserId(authentication);
-        WeatherData weatherData = weatherService.getWeatherData("cairo");
+        WeatherData weatherData = weatherService.getWeatherData("Madagascar");
 
         List<Ticket> tickets;
         List<Lead> leads;
@@ -106,7 +106,6 @@ public class HomePageController {
             model.addAttribute("eventDisplays", eventDisplays);
             model.addAttribute("hasCalendarAccess", hasCalendarAccess);
             model.addAttribute("isGoogleUser", isGoogleUser);
-
         }
         model.addAttribute("tickets", tickets);
         model.addAttribute("leads", leads);
@@ -115,6 +114,7 @@ public class HomePageController {
         model.addAttribute("countTickets", countTickets);
         model.addAttribute("countLeads", countLeads);
         model.addAttribute("countContracts", countContracts);
+
 
         return (AuthorizationUtil.hasRole(authentication,"ROLE_CUSTOMER")) ? "customer-dashboard" : "index";
     }

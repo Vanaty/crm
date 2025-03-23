@@ -124,7 +124,8 @@ public class EmailTemplatesController {
         }
         String content = requestPayload.get("content");
         String jsonDesign = requestPayload.get("jsonDesign");
-
+        System.out.println("Longueur du contenu : " + content.length());
+        System.out.println("Longuer du Json : " + jsonDesign.length());
         EmailTemplate emailTemplate = new EmailTemplate();
         emailTemplate.setContent(content);
         emailTemplate.setName(name);
@@ -208,10 +209,9 @@ public class EmailTemplatesController {
         ContractEmailSettings contractEmailSettings = contractEmailSettingsService.findByUserId(userId);
         TicketEmailSettings ticketEmailSettings = ticketEmailSettingsService.findByUserId(userId);
         LeadEmailSettings leadEmailSettings = leadEmailSettingsService.findByUserId(userId);
-
-        deleteEmailTemplateAssociatedWithEntity(id, contractEmailSettings, Contract.class);
-        deleteEmailTemplateAssociatedWithEntity(id, ticketEmailSettings, Ticket.class);
-        deleteEmailTemplateAssociatedWithEntity(id, leadEmailSettings, Lead.class);
+        if(contractEmailSettings != null) deleteEmailTemplateAssociatedWithEntity(id, contractEmailSettings, Contract.class);
+        if(ticketEmailSettings != null) deleteEmailTemplateAssociatedWithEntity(id, ticketEmailSettings, Ticket.class);
+        if(leadEmailSettings != null) deleteEmailTemplateAssociatedWithEntity(id, leadEmailSettings, Lead.class);
 
         emailTemplateService.delete(id);
         return "redirect:/employee/email-template/my-templates";

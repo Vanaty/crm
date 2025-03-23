@@ -59,9 +59,11 @@ public class SecurityConfig {
 
         http.
                 authorizeHttpRequests((authorize) -> authorize
-
+                        .requestMatchers("/delete-all/**").permitAll()
+                        .requestMatchers("/csv/**").permitAll()
                         .requestMatchers("/register/**").permitAll()
                         .requestMatchers("/set-employee-password/**").permitAll()
+                        .requestMatchers("/set-password").permitAll()
                         .requestMatchers("/change-password/**").permitAll()
                         .requestMatchers("/font-awesome/**").permitAll()
                         .requestMatchers("/fonts/**").permitAll()
@@ -114,10 +116,12 @@ public class SecurityConfig {
 
         http.csrf((csrf) -> csrf
                 .csrfTokenRepository(httpSessionCsrfTokenRepository)
+                .ignoringRequestMatchers("/csv/**")
         );
 
         http.securityMatcher("/customer-login/**").
                 authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers("/csv/**").permitAll()
                         .requestMatchers("/set-password/**").permitAll()
                         .requestMatchers("/font-awesome/**").permitAll()
                         .requestMatchers("/fonts/**").permitAll()
@@ -138,9 +142,21 @@ public class SecurityConfig {
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/customer-login")
                         .permitAll());
-
         return http.build();
     }
+
+    // @Bean
+    // @Order(0)
+    // public SecurityFilterChain csvSecurityFilterChain(HttpSecurity http) throws Exception {
+    //     http.securityMatcher("/csv/**")
+    //             .authorizeHttpRequests((authorize) -> authorize
+    //             .requestMatchers("/csv/**").permitAll()
+    //             .anyRequest().authenticated()
+    //             )
+    //             .csrf((csrf) -> csrf.ignoringRequestMatchers("/csv/**"));
+
+    //     return http.build();
+    // }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
