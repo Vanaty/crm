@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "trigger_lead")
 public class Lead {
@@ -36,15 +38,19 @@ public class Lead {
     @Column(name = "google_drive_folder_id")
     private String googleDriveFolderId;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "lead", cascade = CascadeType.ALL)
     private List<LeadAction> leadActions;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "lead", cascade = CascadeType.ALL)
     private List<File> files;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "lead", cascade = CascadeType.ALL)
     private List<GoogleDriveFile> googleDriveFiles;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "lead", cascade = CascadeType.ALL)
     private List<Expense> expenses;
 

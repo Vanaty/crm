@@ -9,6 +9,8 @@ public interface CustomerService {
 
     public Customer findByCustomerId(int customerId);
 
+    public Integer count();
+
     public List<Customer> findByUserId(int userId);
 
     public Customer findByEmail(String email);

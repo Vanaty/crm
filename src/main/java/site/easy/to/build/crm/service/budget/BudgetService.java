@@ -2,7 +2,9 @@ package site.easy.to.build.crm.service.budget;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -123,5 +125,18 @@ public class BudgetService {
     }
     public BudgetSettings getBudgetSettings() {
         return budgetSettingsRepository.findFirstByOrderByIdAsc();
+    }
+
+    public Map<String,BigDecimal> getBudgetsPerCustomer() {
+        List<Object[]> results = budgetRepository.findTotalBudgetByCustomer();
+        Map<String, BigDecimal> budgetMap = new HashMap<>();
+
+        for (Object[] row : results) {
+            String customerName = (String) row[0];
+            BigDecimal totalBudget = (BigDecimal) row[1];
+            budgetMap.put(customerName, totalBudget);
+        }
+
+        return budgetMap;
     }
 }

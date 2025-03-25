@@ -8,6 +8,8 @@ import java.util.List;
 public interface LeadService {
     public Lead findByLeadId(int id);
 
+    public Integer count();
+
     public List<Lead> findAll();
 
     public List<Lead> findAssignedLeads(int userId);
