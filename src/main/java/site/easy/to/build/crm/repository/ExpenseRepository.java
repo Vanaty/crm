@@ -25,4 +25,7 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
     
     @Query("SELECT FUNCTION('DATE_FORMAT', e.createdAt, '%Y-%m') as month, SUM(e.amount) FROM Expense e GROUP BY month")
     List<Object[]> findTotalExpensesPerMonth();
+
+    @Query("SELECT e.customer.customerId, SUM(e.amount) FROM Expense e GROUP BY e.customer.customerId")
+    List<Object[]> findTotalExpensesPerCustomer();
 }

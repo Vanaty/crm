@@ -139,4 +139,8 @@ public class BudgetService {
 
         return budgetMap;
     }
+
+    public BigDecimal getTotalBudget() {
+        return budgetRepository.getTotalBudget();
+    }
 }

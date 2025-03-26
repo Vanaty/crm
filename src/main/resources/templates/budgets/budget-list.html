@@ -62,16 +62,16 @@
                                         <tbody>
                                             <tr th:each="budget : ${budgets}">
                                                 <td th:text="${budget.name}"></td>
-                                                <td th:text="${budget.amount}"></td>
+                                                <td class="currency" th:data-amount="${budget.amount}"></td>
                                                 <td th:text="${budget.createdAt}"></td>
                                             </tr>
                                             <tr class="table-info">
                                                 <td><strong>Total Budget</strong></td>
-                                                <td colspan="2" th:text="${totalBudget}"></td>
+                                                <td class="currency" colspan="2" th:data-amount="${totalBudget}"></td>
                                             </tr>
                                             <tr class="table-info">
                                                 <td><strong>Total Dépenses</strong></td>
-                                                <td colspan="2" th:text="${totalExpenses}"></td>
+                                                <td colspan="2" class="currency" th:data-amount="${totalExpenses}"></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -81,7 +81,7 @@
                                 <div th:classappend="${status}" class="m-t-20">
                                     <strong>Statut:</strong> 
                                     <span th:text="${status}"></span>
-                                    <span th:if="${settings?.alertThreshold}" 
+                                    <span th:if="${settings?.alertThreshold != null}" 
                                           th:text="' (Seuil: ' + ${settings.alertThreshold} + '%)'"></span>
                                 </div>
                             </div>
@@ -116,6 +116,7 @@
     <script th:src="@{/js/library/jquery.sparkline.min.js}" type="text/javascript"></script>
     <script th:src="@{/js/library/custom.min.js}" type="text/javascript"></script>
     <!-- Editable -->
+    <script th:src="@{/js/format.js}"></script>
     <script th:src="@{/js/library/wysihtml5-0.3.0.js}"></script>
     <script th:src="@{/js/library/bootstrap-wysihtml5.js}"></script>
     <script>

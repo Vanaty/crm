@@ -58,6 +58,8 @@ public class DashboardApiController {
         stats.put("clientCount", customerService.count());
         stats.put("leadCount", leadService.count());
         stats.put("ticketCount", ticketService.count());
+        stats.put("budgetsTtl", budgetService.getTotalBudget());
+        stats.put("expensesTtl", expenseService.getTotalExpenses());
         return ResponseEntity.ok(stats);
     }
 
@@ -140,13 +142,13 @@ public class DashboardApiController {
     public ResponseEntity<?> deleteLead(@PathVariable Integer id) {
         Lead lead =  leadService.findByLeadId(id);
         leadService.delete(lead);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(Map.of("status","success"));
     }
 
     @DeleteMapping("/tickets/{id}")
     public ResponseEntity<?> deleteTicket(@PathVariable Integer id) {
         ticketService.delete(ticketService.findByTicketId(id));
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(Map.of("status","success"));
     }
 
     @PostMapping("/alerts/budget")

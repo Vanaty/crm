@@ -23,4 +23,7 @@ public interface CustomerBudgetRepository extends JpaRepository<CustomerBudget, 
 
     @Query("SELECT b.customer.name,SUM(b.amount) FROM CustomerBudget b GROUP BY b.customer.customerId")
     List<Object[]> findTotalBudgetByCustomer();
+
+    @Query("SELECT COALESCE(SUM(b.amount), 0) FROM CustomerBudget b")
+    BigDecimal getTotalBudget();
 }

@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,7 @@ import site.easy.to.build.crm.repository.CustomerRepository;
 import site.easy.to.build.crm.repository.ExpenseRepository;
 import site.easy.to.build.crm.repository.LeadRepository;
 import site.easy.to.build.crm.repository.TicketRepository;
+import site.easy.to.build.crm.util.RandomnUtil;
 import site.easy.to.build.crm.exception.ImportException;
 
 @Service
@@ -55,7 +57,7 @@ public class ImportServiceImpl implements ImportService {
             lineNumber++;
             if (lineNumber == 1 && line.contains("customer_email")) continue;
 
-            String[] parts = line.split(",", -1);
+            String[] parts = line.split(",", 5);
             if (parts.length < 5) {
                 errors.add("Ligne " + lineNumber + ": colonnes insuffisantes");
                 continue;
@@ -92,7 +94,8 @@ public class ImportServiceImpl implements ImportService {
 
                 if (type.equals("lead")) {
                     if (!List.of("meeting-to-schedule","scheduled","archived","success","assign-to-sales").contains(status)) {
-                        throw new RuntimeException("Statut invalide pour lead: " + status);
+                        // throw new RuntimeException("Statut invalide pour lead: " + status);
+                        status = "meeting-to-schedule";
                     }
 
                     Lead lead = new Lead();
@@ -108,7 +111,8 @@ public class ImportServiceImpl implements ImportService {
 
                 } else if (type.equals("ticket")) {
                     if (!List.of("open","assigned","on-hold","in-progress","resolved","closed","reopened","pending-customer-response","escalated","archived").contains(status)) {
-                        throw new RuntimeException("Statut invalide pour ticket: " + status);
+                        // throw new RuntimeException("Statut invalide pour ticket: " + status);
+                        status = "open";
                     }
 
                     Ticket ticket = new Ticket();
@@ -117,7 +121,7 @@ public class ImportServiceImpl implements ImportService {
                     ticket.setSubject(subjectOrName);
                     ticket.setManager(manager);
                     ticket.setEmployee(manager);
-                    ticket.setPriority("low");
+                    ticket.setPriority(RandomnUtil.randomObject(List.of("low", "medium", "high","closed","urgent","critical")).toString());
                     ticket.setCreatedAt(LocalDateTime.now());
                     ticket = ticketRepository.save(ticket);
 
@@ -197,7 +201,7 @@ public class ImportServiceImpl implements ImportService {
             lineNumber++;
             if (lineNumber == 1 && line.toLowerCase().contains("customer_email")) continue;
 
-            String[] parts = line.split(",", -1);
+            String[] parts = line.split(",", 2);
             if (parts.length < 2) {
                 errors.add("Ligne " + lineNumber + " : colonnes manquantes");
                 continue;
@@ -224,8 +228,8 @@ public class ImportServiceImpl implements ImportService {
                 CustomerBudget budget = new CustomerBudget();
                 budget.setCustomer(customer);
                 budget.setAmount(amount);
-                budget.setName("Budget importé");
-                budget.setCreatedAt(LocalDateTime.now());
+                budget.setName("Budget import");
+                budget.setCreatedAt(RandomnUtil.getRandomDateTime());
 
                 customerBudgetRepository.save(budget);
 
@@ -260,6 +264,7 @@ public class ImportServiceImpl implements ImportService {
         }
 
         expense.setAmount(amount);
+        expense.setCreatedAt(RandomnUtil.getRandomDateTime());
         expenseRepository.save(expense);
     }
 }

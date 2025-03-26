@@ -2,11 +2,15 @@ package site.easy.to.build.crm.dto;
 
 import java.math.BigDecimal;
 
+import site.easy.to.build.crm.entity.Customer;
+
 public class BudgetExpenseDTO {
+    private Customer customer;
     private BigDecimal expenses;
     private BigDecimal budget;
 
-    public BudgetExpenseDTO(BigDecimal expenses, BigDecimal budget) {
+    public BudgetExpenseDTO(Customer customer, BigDecimal expenses, BigDecimal budget) {
+        this.customer = customer;
         this.expenses = expenses;
         this.budget = budget;
     }
@@ -25,5 +29,13 @@ public class BudgetExpenseDTO {
 
     public void setBudget(BigDecimal budget) {
         this.budget = budget;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 }
