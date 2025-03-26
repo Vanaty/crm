@@ -7,7 +7,9 @@ import site.easy.to.build.crm.entity.Customer;
 import site.easy.to.build.crm.repository.TicketRepository;
 import site.easy.to.build.crm.entity.Ticket;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class TicketServiceImpl implements TicketService{
@@ -16,6 +18,11 @@ public class TicketServiceImpl implements TicketService{
 
     public TicketServiceImpl(TicketRepository ticketRepository) {
         this.ticketRepository = ticketRepository;
+    }
+
+    @Override
+    public Integer count() {
+        return (int) ticketRepository.count();
     }
 
     @Override
@@ -89,5 +96,23 @@ public class TicketServiceImpl implements TicketService{
     @Override
     public void deleteAllByCustomer(Customer customer) {
         ticketRepository.deleteAllByCustomer(customer);
+    }
+
+    @Override
+    public Map<String, Integer> countByPriority() {
+        List<Object[]> tpriority = ticketRepository.countByPriority();
+        Map<String, Integer> rep = new HashMap<>();
+        rep.put("low", 0);
+        rep.put("medium", 0);
+        rep.put("hight", 0);
+        rep.put("critical", 0);
+        rep.put("urgent", 0);
+        rep.put("closed", 0);
+        for (Object[] row : tpriority) {
+            String priority =  row[0].toString();
+            Integer count = Integer.valueOf(row[1].toString());
+            rep.put(priority, count);
+        }
+        return rep;
     }
 }

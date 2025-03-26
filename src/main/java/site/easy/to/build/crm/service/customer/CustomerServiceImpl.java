@@ -18,6 +18,11 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    public Integer count() {
+        return (int) customerRepository.count();
+    }
+
+    @Override
     public Customer findByCustomerId(int customerId) {
         return customerRepository.findByCustomerId(customerId);
     }

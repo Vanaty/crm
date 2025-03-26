@@ -219,9 +219,11 @@ public class LeadController {
             return "redirect:/employee/calendar/create-event?leadId=" + lead.getLeadId();
         }
         if(AuthorizationUtil.hasRole(authentication, "ROLE_MANAGER")) {
-            return "redirect:/employee/lead/created-leads";
+            // return "redirect:/employee/lead/created-leads";
+            return "redirect:/employee/customer/expenses/add/"+lead.getCustomer().getCustomerId()+"?leadId="+lead.getLeadId();
         }
-        return "redirect:/employee/lead/assigned-leads";
+        // return "redirect:/employee/lead/assigned-leads";
+        return "redirect:/employee/customer/expenses/add/"+lead.getCustomer().getCustomerId()+"?leadId="+lead.getLeadId();
     }
 
     @GetMapping("/update/{id}")
