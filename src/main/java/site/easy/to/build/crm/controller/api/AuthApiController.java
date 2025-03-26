@@ -11,6 +11,7 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.web.bind.annotation.*;
 import site.easy.to.build.crm.config.CrmUserDetails;
 import site.easy.to.build.crm.entity.ApiToken;
+import site.easy.to.build.crm.entity.Role;
 import site.easy.to.build.crm.entity.User;
 import site.easy.to.build.crm.repository.ApiTokenRepository;
 import site.easy.to.build.crm.repository.UserRepository;
@@ -44,6 +45,8 @@ public class AuthApiController {
         final String username = request.get("username");
         final String password = request.get("password");
 
+        System.out.println("\n\n\nLogin"+username);
+
         try {
             User user = userRepository.findByUsername(username)
                 .stream()
@@ -51,7 +54,7 @@ public class AuthApiController {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
             if (!passwordEncoder.matches(password, user.getPassword())) {
-                return ResponseEntity.badRequest().body(Map.of("error", "Invalid credentials"));
+                return ResponseEntity.badRequest().body(Map.of("status","error","message", "Invalid credentials"));
             }
             
             ApiToken apiToken = new ApiToken(user);
@@ -59,6 +62,7 @@ public class AuthApiController {
 
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
             return ResponseEntity.ok(Map.of(
+                "status","success",
                 "token", apiToken.getToken(),
                 "username", username,
                 "roles", userDetails.getAuthorities(),
@@ -66,37 +70,53 @@ public class AuthApiController {
             ));
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.badRequest().body(Map.of("error", "Invalid credentials"));
+            return ResponseEntity.badRequest().body(Map.of("status","error","message", "Invalid credentials"));
         }
     }
 
-    @GetMapping("/oauth2/google")
-    public ResponseEntity<?> handleOAuth2GoogleCallback(@RequestParam String code) {
+    @PostMapping("/google")
+    public ResponseEntity<?> createGoogleAuthenticationToken(@RequestBody Map<String, String> request) {
+        final String email = request.get("email");
+        System.out.println("#\n\n\n"+email);
+        if (email == null || email.isEmpty() || !email.contains("@")) {
+            return ResponseEntity.badRequest().body(Map.of(
+                "status", "error",
+                "message", "Valid email is required"
+            ));
+        }
+        final String username = email.split("@")[0];
+        if (username.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of(
+                "status", "error",
+                "message", "Username cannot be empty"
+            ));
+        }
+        final String googleId = request.get("google_id"); // Consider validating or using this
+
         try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication instanceof OAuth2AuthenticationToken) {
-                String username = authentication.getName();
-                User user = userRepository.findByUsername(username)
-                    .stream()
-                    .findFirst()
-                    .orElseThrow(() -> new RuntimeException("User not found"));
+            User user = userRepository.findByEmail(email);
 
-                // Créer un nouveau token API
-                ApiToken apiToken = new ApiToken(user);
-                apiTokenRepository.save(apiToken);
-
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                return ResponseEntity.ok(Map.of(
-                    "token", apiToken.getToken(),
-                    "username", username,
-                    "roles", userDetails.getAuthorities(),
-                    "expiresAt", apiToken.getExpiresAt()
-                ));
+            if (user == null) {
+                return ResponseEntity.ok(Map.of("status","error","message", "Invalid credentials"));
+            } else if(!user.getRoles().get(0).getName().equals("ROLE_MANAGER")) {
+                return ResponseEntity.ok(Map.of("status","error","message", "Invalid credentials"));
             }
-            return ResponseEntity.badRequest().body(Map.of("error", "Invalid OAuth2 authentication"));
+
+            ApiToken apiToken = new ApiToken(user);
+            apiTokenRepository.save(apiToken);
+            return ResponseEntity.ok(Map.of(
+                "status", "success",
+                "token", apiToken.getToken(),
+                "username", username,
+                "roles",user.getRoles().get(0).getName(),
+                "expiresAt", apiToken.getExpiresAt()
+            ));
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.badRequest().body(Map.of("error", "Authentication failed"));
+            return ResponseEntity.badRequest().body(Map.of(
+                "status", "error",
+                "message", "Invalid credentials: " + e.getMessage()
+            ));
         }
     }
 

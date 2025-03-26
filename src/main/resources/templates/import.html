@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="~{/general/head.html}"></head>
+<meta name="csrf" content="${_csrf.token}" />
+<meta name="csrf_header" content="${_csrf.headerName}" />
+
+<link rel="stylesheet" th:href="@{/css/bootstrap-wysihtml5.css}" />
+<link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" />
+<link th:href="@{/css/style.min.css}" rel="stylesheet" />
+<link th:href="@{/css/pages/inbox.css}" rel="stylesheet" />
+<link th:href="@{/css/ribbon-page.css}" rel="stylesheet" />
+
+<body class="skin-blue fixed-layout">
+<div class="preloader">
+    <div class="loader">
+        <div class="loader__figure"></div>
+        <p class="loader__label">Elite admin</p>
+    </div>
+</div>
+
+<div id="main-wrapper">
+    <div th:insert="~{/general/header.html}"></div>
+    <div th:insert="~{/general/left-sidebar.html}"></div>
+
+    <div class="page-wrapper">
+        <div class="container-fluid">
+            <div th:insert="~{/general/page-titles.html}"></div>
+
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">📥 Importation de fichiers CSV</h4>
+
+                            <form th:action="@{/imports}" method="post" enctype="multipart/form-data">
+                                <!-- Champ 1 : Leads / Tickets -->
+                                <div class="form-group mb-4">
+                                    <label for="leadsTicketsFile">📋 Fichier Leads & Tickets :</label>
+                                    <input type="file" name="leadsTicketsFile" class="form-control" required />
+                                </div>
+                            
+                                <!-- Champ 2 : Clients -->
+                                <div class="form-group mb-4">
+                                    <label for="customersFile">👤 Fichier Clients :</label>
+                                    <input type="file" name="customersFile" class="form-control" />
+                                </div>
+                            
+                                <!-- Champ 3 : Budgets -->
+                                <div class="form-group mb-4">
+                                    <label for="budgetsFile">💰 Fichier Budgets :</label>
+                                    <input type="file" name="budgetsFile" class="form-control" />
+                                </div>
+                            
+                                <button type="submit" class="btn btn-primary btn-rounded">
+                                    🚀 Importer
+                                </button>
+                            </form>                            
+
+                            <!-- ✅ Message de succès -->
+                            <div th:if="${success}" class="alert alert-success mt-4">
+                                <i class="fas fa-check-circle"></i>
+                                <span th:text="${success}"></span>
+                            </div>
+
+                            <!-- ❌ Erreur globale -->
+                            <div th:if="${globalError}" class="alert alert-danger mt-4">
+                                <i class="fas fa-times-circle"></i>
+                                <strong>Import annulé :</strong>
+                                <span th:text="${globalError}"></span>
+                            </div>
+
+                            <!-- ❌ Erreurs par fichier -->
+                            <div th:if="${errors}">
+                                <h5 class="mt-4 mb-3 text-danger">🛑 Erreurs détectées :</h5>
+                                <div th:each="entry : ${errors}" class="alert alert-danger">
+                                    <strong th:text="'📄 Fichier : ' + ${entry.key}"></strong>
+                                    <ul class="mt-2 mb-0">
+                                        <li th:each="err : ${entry.value}" th:text="${err}"></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <hr class="my-5"/>
+
+                            <div class="card border border-warning shadow-sm">
+                                <div class="card-header bg-warning text-dark">
+                                    <h5 class="mb-0">🧹 Nettoyage de la base CRM</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p class="text-dark fw-medium mb-3">
+                                        Cette opération supprimera <strong>toutes les données</strong> du CRM (clients, leads, tickets, budgets, etc.). <br/>
+                                        <span class="text-muted">⚠️ Elle est irréversible, veuillez confirmer avant de poursuivre.</span>
+                                    </p>
+                            
+                                    <div th:if="${cleanSuccess}" class="alert alert-success">
+                                        ✅ Les données ont été nettoyées avec succès !
+                                    </div>
+                            
+                                    <a th:href="@{/delete-all}" class="btn btn-outline-warning btn-rounded">
+                                        🔄 Lancer le nettoyage complet
+                                    </a>
+                                </div>
+                            </div>                            
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:insert="~{/general/footer.html}"></div>
+</div>
+
+<!-- Scripts -->
+<script th:inline="javascript">var home = /*[[${home}]]*/ null;</script>
+<script th:src="@{/js/library/jquery-3.2.1.min.js}"></script>
+<script th:src="@{/js/library/popper.min.js}"></script>
+<script th:src="@{/js/library/bootstrap.min.js}"></script>
+<script th:src="@{/js/library/perfect-scrollbar.jquery.min.js}"></script>
+<script th:src="@{/js/library/waves.js}"></script>
+<script th:src="@{/js/library/sidebarmenu.js}"></script>
+<script th:src="@{/js/library/sticky-kit.min.js}"></script>
+<script th:src="@{/js/library/jquery.sparkline.min.js}"></script>
+<script th:src="@{/js/library/custom.min.js}"></script>
+<script th:src="@{/js/library/wysihtml5-0.3.0.js}"></script>
+<script th:src="@{/js/library/bootstrap-wysihtml5.js}"></script>
+</body>
+</html>

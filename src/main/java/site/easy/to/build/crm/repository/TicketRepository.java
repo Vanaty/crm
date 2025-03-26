@@ -32,7 +32,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Integer> {
     long countByCustomerCustomerId(int customerId);
 
     void deleteAllByCustomer(Customer customer);
-
+    
     @Query("SELECT t.priority, COUNT(t.ticketId) FROM Ticket t GROUP BY t.priority")
     List<Object[]> countByPriority();
 }

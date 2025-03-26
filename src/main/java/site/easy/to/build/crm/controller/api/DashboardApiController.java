@@ -86,7 +86,7 @@ public class DashboardApiController {
                 map.put("id", lead.getLeadId());
                 map.put("name", lead.getName());
                 map.put("customer", lead.getCustomer().getName());
-                map.put("employe", lead.getEmployee().getUsername());
+                map.put("employee", lead.getEmployee().getUsername());
                 map.put("createdAt",lead.getCreatedAt());
                 map.put("phone",lead.getPhone());
                 map.put("status",lead.getStatus());

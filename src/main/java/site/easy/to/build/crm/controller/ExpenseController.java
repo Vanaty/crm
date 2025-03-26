@@ -119,7 +119,7 @@ public class ExpenseController {
         }
 
         expenseRepository.save(expense);
-        return "redirect:/employee/customer/budgets/" + customerId; // Redirige vers la liste des budgets
+        return "redirect:/employee/customer/budgets/" + customerId;
     }
 
     // Confirmer l’ajout malgré dépassement du budget

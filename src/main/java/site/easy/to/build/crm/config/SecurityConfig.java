@@ -75,6 +75,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/login").permitAll()
                 .requestMatchers("/api/auth/oauth2/**").permitAll()
+                .requestMatchers("/api/auth/google").permitAll()
                 .anyRequest().authenticated()
             )
             .oauth2Login(oauth2 -> oauth2
@@ -131,6 +132,7 @@ public class SecurityConfig {
                 .requestMatchers(AntPathRequestMatcher.antMatcher("/**/manager/**")).hasRole("MANAGER")
                 .requestMatchers("/employee/**").hasAnyRole("MANAGER", "EMPLOYEE")
                 .requestMatchers("/customer/**").hasRole("CUSTOMER")
+                .requestMatchers("/imports").hasAnyRole("EMPLOYEE","MANAGER")
                 .anyRequest().authenticated()
             )
             .formLogin((form) -> form
