@@ -84,6 +84,7 @@ public class ImportServiceImpl implements ImportService {
                 if (customer == null) {
                     customer = new Customer();
                     customer.setEmail(email);
+                    customer.setUser(manager);
                     customer.setName("Anonymous " + email);
                     customer.setCountry("Unknown");
                     customer = customerRepository.save(customer);
@@ -100,6 +101,7 @@ public class ImportServiceImpl implements ImportService {
                     lead.setName(subjectOrName);
                     lead.setCreatedAt(LocalDateTime.now());
                     lead.setManager(manager);
+                    lead.setEmployee(manager);
                     lead = leadRepository.save(lead);
 
                     createExpense(customer.getCustomerId(), lead.getLeadId(), null, expenseAmount);
@@ -139,7 +141,7 @@ public class ImportServiceImpl implements ImportService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public List<String> processCustomerNameFile(String filename, BufferedReader reader) throws IOException {
+    public List<String> processCustomerNameFile(String filename,User manager, BufferedReader reader) throws IOException {
         List<String> errors = new ArrayList<>();
         String line;
         int lineNumber = 0;
@@ -162,6 +164,7 @@ public class ImportServiceImpl implements ImportService {
                 if (customer == null) {
                     Customer newCustomer = new Customer();
                     newCustomer.setEmail(email);
+                    newCustomer.setUser(manager);
                     newCustomer.setName(name);
                     newCustomer.setCountry("Non spécifié");
                     customerRepository.save(newCustomer);

@@ -54,11 +54,6 @@ public class ImportController {
         User manager = userService.findById(userId);
         Map<String, List<String>> errorMap = new HashMap<>();
 
-        // === Fichier Leads & Tickets ===
-        if (leadsTicketsFile != null && !leadsTicketsFile.isEmpty()) {
-            processFile(leadsTicketsFile, errorMap,manager, model);
-        }
-
         // === Fichier Clients ===
         if (customersFile != null && !customersFile.isEmpty()) {
             processFile(customersFile, errorMap,manager, model);
@@ -67,6 +62,11 @@ public class ImportController {
         // === Fichier Budgets ===
         if (budgetsFile != null && !budgetsFile.isEmpty()) {
             processFile(budgetsFile, errorMap,manager, model);
+        }
+
+        // === Fichier Leads & Tickets ===
+        if (leadsTicketsFile != null && !leadsTicketsFile.isEmpty()) {
+            processFile(leadsTicketsFile, errorMap,manager, model);
         }
 
         if (errorMap.isEmpty() && !model.containsAttribute("globalError")) {
@@ -89,7 +89,7 @@ public class ImportController {
                 List<String> errors;
 
                 if (header != null && header.toLowerCase().contains("customer_name")) {
-                    errors = importService.processCustomerNameFile(file.getOriginalFilename(), reader);
+                    errors = importService.processCustomerNameFile(file.getOriginalFilename(),manager, reader);
                 } else if (header != null && header.toLowerCase().contains("budget")) {
                     errors = importService.processCustomerBudgetFile(file.getOriginalFilename(), reader);
                 } else {
