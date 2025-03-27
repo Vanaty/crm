@@ -25,4 +25,6 @@ public interface CustomerService {
 
     long countByUserId(int userId);
 
+    Customer duplicate(int customerId);
+
 }

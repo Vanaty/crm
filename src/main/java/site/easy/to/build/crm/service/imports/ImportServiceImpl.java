@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.springframework.stereotype.Service;
@@ -244,6 +245,7 @@ public class ImportServiceImpl implements ImportService {
         return errors;
     }
 
+
     private void createExpense(Integer customerId, Integer leadId, Integer ticketId, BigDecimal amount) {
         Expense expense = new Expense();
 
@@ -266,5 +268,77 @@ public class ImportServiceImpl implements ImportService {
         expense.setAmount(amount);
         expense.setCreatedAt(RandomnUtil.getRandomDateTime());
         expenseRepository.save(expense);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void importMap(List<Map<String, Object>> data, List<String> errorMap,User manager) {
+        /*
+         * customer_email,customer_name,subject_or_name,type,status,createdAt,employee,expense
+        copy_ralph82@yahoo.com,copyNicholas Peck,Scale b2c convergence,lead,meeting-to-schedule,2025-03-26T14:40:20.952320,58,"2802.79"
+        copy_ralph82@yahoo.com,copyNicholas Peck,Monetize dot-com supply-chains,ticket,archived,2025-03-26T14:40:20.916669,58,"8686.17"
+        copy_ralph82@yahoo.com,copyNicholas Peck,Disintermediate next-generation web services,ticket,open,2025-03-26T14:40:21.133229,58,"3318.67"
+        copy_ralph82@yahoo.com,copyNicholas Peck,Mesh leading-edge architectures,ticket,open,2025-03-26T14:40:21.164454,58,"8585.54"
+        copy_ralph82@yahoo.com,copyNicholas Peck,Optimize next-generation technologies,ticket,archived,2025-03-26T14:40:21.276118,58,"6128.99"
+         */
+        int count = 0;
+        Customer customer = new Customer();
+        for (Map<String, Object> map : data) {
+            if (count == 0) {
+                count ++;
+                continue;
+            }
+            String customerEmail = (String) map.get("customer_email");
+            String customerName = (String) map.get("customer_name");
+            String subjectOrName = (String) map.get("subject_or_name");
+            String type = (String) map.get("type");
+            String status = (String) map.get("status");
+            String createdAt = (String) map.get("createdAt");
+            String employee =  map.get("employee").toString();
+            String expense = map.get("expense").toString();
+            
+            User employeeUser = new User();
+            employeeUser.setId(Integer.valueOf(employee));
+            if(count == 1) {
+                customer.setEmail(customerEmail);
+                customer.setUser(manager);
+                customer.setName(customerName);
+                customer.setCountry("Non spécifié");
+                customer = customerRepository.save(customer);
+            }
+            Expense expenseObj = new Expense();
+            expenseObj.setAmount(BigDecimal.valueOf(Double.parseDouble(expense)));
+            expenseObj.setCreatedAt(LocalDateTime.parse(createdAt));
+            expenseObj.setCustomer(customer);
+            
+            if (type.equals("lead")) {
+                Lead lead = new Lead();
+                lead.setCustomer(customer);
+                lead.setStatus(status);
+                lead.setName(subjectOrName);
+                lead.setCreatedAt(LocalDateTime.parse(createdAt));
+                lead.setManager(manager);
+                lead.setEmployee(employeeUser);
+                expenseObj.setLead(leadRepository.save(lead));
+                
+            }
+            if (type.equals("ticket")) {
+                Ticket ticket = new Ticket();
+                ticket.setCustomer(customer);
+                ticket.setStatus(status);
+                ticket.setPriority(RandomnUtil.randomObject(List.of("low", "medium", "high","closed","urgent","critical")).toString());
+                ticket.setSubject(subjectOrName);  
+                ticket.setCreatedAt(LocalDateTime.parse(createdAt));
+                ticket.setManager(manager);
+                ticket.setEmployee(employeeUser);
+                // ticket.setExpenses(expenses);
+                // tickets.add(ticket);
+                expenseObj.setTicket(ticketRepository.save(ticket));
+            }
+
+            expenseRepository.save(expenseObj);
+            count++;
+        }
+        customerRepository.save(customer);
     }
 }

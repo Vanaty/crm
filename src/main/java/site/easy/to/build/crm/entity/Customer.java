@@ -81,6 +81,10 @@ public class Customer {
     private List<CustomerBudget> budgets = new ArrayList<>();
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<Expense> expenses = new ArrayList<>();
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    private List<Lead> leads = new ArrayList<>();
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    private List<Ticket> tickets = new ArrayList<>();
 
     @Transient
     private BigDecimal totalBudget;
@@ -88,6 +92,22 @@ public class Customer {
     @Transient 
     private BigDecimal totalExpenses;
 
+
+    public List<Lead> getLeads() {
+        return leads;
+    }
+
+    public void setLeads(List<Lead> leads) {
+        this.leads = leads;
+    }
+
+    public List<Ticket> getTickets() {
+        return tickets;
+    }
+
+    public void setTickets(List<Ticket> tickets) {
+        this.tickets = tickets;
+    }
     public Customer() {
     }
 
