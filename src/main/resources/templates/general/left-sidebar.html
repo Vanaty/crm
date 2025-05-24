@@ -41,6 +41,8 @@
                                 <li><a th:href="${home + 'employee/settings/email/ticket'}">Ticket Settings</a></li>
                             </ul>
                         </li>
+                        <li><a th:href="${home + 'employee/customer/budgets/update-threshold'}">Budget setting</a></li>
+                        <li><a th:href="${home + 'imports'}">Imports</a></li>
                     </ul>
                 </li>
                 <li class="nav-small-cap">--- Google Services</li>
@@ -101,6 +103,18 @@
                         <li><a th:href="${home + 'employee/customer/create-customer'}">Create customer</a></li>
                     </ul>
                 </li>
+                <li>
+                    <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)">
+                        <i class="fas fa-money-bill"></i>
+                        <span class="hide-menu">Budgets&Expense</span>
+                    </a>
+                    <ul class="collapse">
+                        <li><a th:if="${#authorization.expression('hasRole(''ROLE_CUSTOMER'')')}" th:href="${home + 'employee/customer/budget/my-budget'}">My budget</a></li>
+                        <li><a th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'') or hasRole(''ROLE_EMPLOYEE'')')}" th:href="${home + 'employee/customer/budgets'}">Customers budget</a></li>
+                        <li><a th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'') or hasRole(''ROLE_EMPLOYEE'')')}" th:href="${home + 'employee/customer/budgets/create'}">Create budget</a></li>
+                    </ul>
+                </li>
+
                 <li class="nav-small-cap">--- Tickets</li>
                 <li>
                     <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)">

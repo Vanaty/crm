@@ -169,9 +169,10 @@ public class TicketController {
         ticket.setEmployee(employee);
         ticket.setCreatedAt(LocalDateTime.now());
 
-        ticketService.save(ticket);
+        int ticketId = ticketService.save(ticket).getTicketId();
 
-        return "redirect:/employee/ticket/assigned-tickets";
+        // return "redirect:/employee/ticket/assigned-tickets";
+        return "redirect:/employee/customer/expenses/add/"+ticket.getCustomer().getCustomerId()+"?ticketId="+ticketId;
     }
 
     @GetMapping("/update-ticket/{id}")

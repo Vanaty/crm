@@ -21,4 +21,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
     public List<Customer> findByUserIdOrderByCreatedAtDesc(int userId, Pageable pageable);
 
     long countByUserId(int userId);
+
+    // List<Object[]> getTotalBudgerExpensePerCustomer();
 }

@@ -19,6 +19,11 @@ public class LeadServiceImpl implements LeadService {
     }
 
     @Override
+    public Integer count() {
+        return (int) leadRepository.count();
+    }
+
+    @Override
     public Lead findByLeadId(int id) {
         return leadRepository.findByLeadId(id);
     }

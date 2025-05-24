@@ -505,3 +505,61 @@ CREATE TABLE IF NOT EXISTS `google_drive_file` (
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+
+-- Table des budgets pour chaque customer
+CREATE TABLE IF NOT EXISTS customer_budget (
+    budget_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    customer_id INT UNSIGNED NOT NULL,
+    name VARCHAR(255) NOT NULL, -- ex. "Marketing Q1 2025"
+    amount DECIMAL(10,2) NOT NULL,
+    -- start_date DATE DEFAULT NULL,
+    -- end_date DATE DEFAULT NULL,
+    -- alert_threshold DECIMAL(5,2) DEFAULT 80.00, -- Pourcentage (ex. 80% pour alerte)
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (budget_id),
+    KEY customer_id (customer_id),
+    CONSTRAINT customer_budget_ibfk_1 FOREIGN KEY (customer_id) REFERENCES customer (customer_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Table des dépenses rattachées aux tickets et leads
+CREATE TABLE IF NOT EXISTS expense (
+    expense_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    customer_id INT UNSIGNED NOT NULL,
+    amount DECIMAL(10,2) NOT NULL,
+    description VARCHAR(255) DEFAULT NULL,
+    ticket_id INT UNSIGNED DEFAULT NULL, -- Nullable si lié à un lead
+    lead_id INT UNSIGNED DEFAULT NULL,   -- Nullable si lié à un ticket
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (expense_id),
+    CONSTRAINT expense_ibfk_1 FOREIGN KEY (customer_id) REFERENCES customer (customer_id),
+    CONSTRAINT expense_ibfk_2 FOREIGN KEY (ticket_id) REFERENCES trigger_ticket (ticket_id),
+    CONSTRAINT expense_ibfk_3 FOREIGN KEY (lead_id) REFERENCES trigger_lead (lead_id),
+    CONSTRAINT check_expense_type CHECK (
+        (ticket_id IS NOT NULL AND lead_id IS NULL) OR 
+        (ticket_id IS NULL AND lead_id IS NOT NULL)
+    )
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE IF NOT EXISTS customer_budget (
+    budget_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    customer_id INT UNSIGNED NOT NULL,
+    name VARCHAR(255) NOT NULL, -- ex. "Marketing Q1 2025"
+    amount DECIMAL(10,2) NOT NULL,
+    -- start_date DATE DEFAULT NULL,
+    -- end_date DATE DEFAULT NULL,
+    -- alert_threshold DECIMAL(5,2) DEFAULT 80.00, -- Pourcentage (ex. 80% pour alerte)
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (budget_id),
+    KEY customer_id (customer_id),
+    CONSTRAINT customer_budget_ibfk_1 FOREIGN KEY (customer_id) REFERENCES customer (customer_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE IF NOT EXISTS budget_settings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    alert_threshold DECIMAL(5,2) DEFAULT 80.00,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

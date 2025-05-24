@@ -8,7 +8,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.groups.Default;
 import site.easy.to.build.crm.customValidations.customer.UniqueEmail;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "customer")
@@ -74,6 +77,37 @@ public class Customer {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    private List<CustomerBudget> budgets = new ArrayList<>();
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    private List<Expense> expenses = new ArrayList<>();
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    private List<Lead> leads = new ArrayList<>();
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    private List<Ticket> tickets = new ArrayList<>();
+
+    @Transient
+    private BigDecimal totalBudget;
+
+    @Transient 
+    private BigDecimal totalExpenses;
+
+
+    public List<Lead> getLeads() {
+        return leads;
+    }
+
+    public void setLeads(List<Lead> leads) {
+        this.leads = leads;
+    }
+
+    public List<Ticket> getTickets() {
+        return tickets;
+    }
+
+    public void setTickets(List<Ticket> tickets) {
+        this.tickets = tickets;
+    }
     public Customer() {
     }
 
@@ -225,6 +259,42 @@ public class Customer {
         this.createdAt = createdAt;
     }
 
+    public List<CustomerBudget> getBudgets() {
+        return budgets;
+    }
+
+    public void setBudgets(List<CustomerBudget> budgets) {
+        this.budgets = budgets;
+    }
+
+    public List<Expense> getExpenses() {
+        return expenses;
+    }
+
+    public void setExpenses(List<Expense> expenses) {
+        this.expenses = expenses;
+    }
+
+    public BigDecimal getTotalBudget() {
+        return totalBudget;
+    }
+
+    public void setTotalBudget(BigDecimal totalBudget) {
+        this.totalBudget = totalBudget;
+    }
+
+    public BigDecimal getTotalExpenses() {
+        return totalExpenses;
+    }
+
+    public void setTotalExpenses(BigDecimal totalExpenses) {
+        this.totalExpenses = totalExpenses;
+    }
+
+    
+
+    
+
 //    public List<Ticket> getTickets() {
 //        return tickets;
 //    }
@@ -238,4 +308,5 @@ public class Customer {
 //    public void setTickets(List<Ticket> tickets) {
 //        this.tickets = tickets;
 //    }
+
 }

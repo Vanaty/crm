@@ -9,6 +9,8 @@ public interface CustomerService {
 
     public Customer findByCustomerId(int customerId);
 
+    public Integer count();
+
     public List<Customer> findByUserId(int userId);
 
     public Customer findByEmail(String email);
@@ -22,5 +24,7 @@ public interface CustomerService {
     public List<Customer> getRecentCustomers(int userId, int limit);
 
     long countByUserId(int userId);
+
+    Customer duplicate(int customerId);
 
 }

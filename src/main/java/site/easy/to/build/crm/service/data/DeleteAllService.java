@@ -22,6 +22,10 @@ public class DeleteAllService {
         jdbcTemplate.execute("TRUNCATE TABLE lead_action");
         jdbcTemplate.execute("TRUNCATE TABLE contract_settings");
         jdbcTemplate.execute("TRUNCATE TABLE trigger_contract");
+
+        jdbcTemplate.execute("TRUNCATE TABLE expense");
+        jdbcTemplate.execute("TRUNCATE TABLE customer_budget");
+        
         jdbcTemplate.execute("TRUNCATE TABLE trigger_ticket");
         jdbcTemplate.execute("TRUNCATE TABLE trigger_lead");
         jdbcTemplate.execute("TRUNCATE TABLE customer");
