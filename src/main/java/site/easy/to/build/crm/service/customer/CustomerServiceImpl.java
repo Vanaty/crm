@@ -62,4 +62,19 @@ public class CustomerServiceImpl implements CustomerService {
     public long countByUserId(int userId) {
         return customerRepository.countByUserId(userId);
     }
+
+    @Override
+    public Customer duplicate(int customerId) {
+        Customer newCustomer  = new Customer();
+        Customer c = customerRepository.findByCustomerId(customerId);
+        newCustomer.setEmail("copy_"+c.getEmail());
+        newCustomer.setUser(c.getUser());
+        newCustomer.setName("copy" + c.getName());
+        newCustomer.setCountry("Unknown");
+        newCustomer.setLeads(c.getLeads());
+        newCustomer.setTickets(c.getTickets());
+        return newCustomer;
+    }
+
+    
 }

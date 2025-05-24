@@ -93,4 +93,18 @@ public class ExpenseService {
                 .map(Expense::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
+
+    public BigDecimal getTotalExpensesByTicket(Integer ticketId) {
+        List<Expense> expenses = findByTicketId(ticketId);
+        return expenses.stream()
+                .map(Expense::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public BigDecimal getTotalExpensesByLead(Integer leadId) {
+        List<Expense> expenses = findByLeadId(leadId);
+        return expenses.stream()
+                .map(Expense::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 }

@@ -28,7 +28,7 @@
                             <div class="card-body">
                                 <h4 class="card-title">Confirmation requise</h4>
                                 <div class="alert alert-danger" th:text="${confirmation}"></div>
-                                <form th:action="@{employee/customer/expenses/add/confirm}" method="post">
+                                <form th:action="@{employee/customer/expenses/add/confirm}" th:object="${expense}" method="post">
                                     <input type="hidden" name="customerId" th:value="${customer.customerId}">
                                     <input type="hidden" name="ticketId" th:value="${ticketId}">
                                     <input type="hidden" name="leadId" th:value="${leadId}">

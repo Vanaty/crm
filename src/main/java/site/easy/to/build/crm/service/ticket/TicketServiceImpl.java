@@ -104,7 +104,7 @@ public class TicketServiceImpl implements TicketService{
         Map<String, Integer> rep = new HashMap<>();
         rep.put("low", 0);
         rep.put("medium", 0);
-        rep.put("hight", 0);
+        rep.put("high", 0);
         rep.put("critical", 0);
         rep.put("urgent", 0);
         rep.put("closed", 0);

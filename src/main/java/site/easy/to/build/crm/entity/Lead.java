@@ -234,6 +234,11 @@ public class Lead {
     public void setExpenses(List<Expense> expenses) {
         this.expenses = expenses;
     }
+
+    public Lead duplicate() throws CloneNotSupportedException {
+        Lead newC = (Lead) this.clone();
+        return newC;
+    }
 }
 
 
